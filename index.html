@@ -1,0 +1,337 @@
+!doctype html>
+&lt;html lang="en">
+&lt;head>
+    &lt;meta charset="UTF-8">
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+    &lt;title>StudyCircle TMU - CEN100 Study Groups&lt;/title>
+    &lt;style>
+        :root {
+            --tmu-blue: #003366;
+            --tmu-blue-light: #004a99;
+            --tmu-yellow: #FFD700;
+            --tmu-yellow-dark: #e6c200;
+            --white: #ffffff;
+            --gray-light: #f4f6f9;
+            --gray: #6b7280;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; color: #333; background: var(--gray-light); }
+        
+        /* Navbar */
+        nav { background: var(--tmu-blue); padding: 0 2rem; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); display: flex; align-items: center; justify-content: space-between; height: 60px; }
+        .nav-brand { display: flex; align-items: center; gap: 10px; color: var(--white); font-weight: 700; font-size: 1.2rem; text-decoration: none; }
+        .nav-brand svg { width: 32px; height: 32px; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a { color: var(--white); text-decoration: none; font-size: 0.95rem; padding: 0.5rem 0; border-bottom: 2px solid transparent; transition: border-color 0.3s; }
+        .nav-links a:hover { border-bottom-color: var(--tmu-yellow); }
+        .hamburger { display: none; background: none; border: none; color: var(--white); font-size: 1.5rem; cursor: pointer; }
+        
+        /* Hero */
+        .hero { background: linear-gradient(135deg, var(--tmu-blue) 0%, var(--tmu-blue-light) 100%); color: var(--white); text-align: center; padding: 5rem 2rem 4rem; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 60%); animation: pulse 6s ease-in-out infinite; }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .hero-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+        .hero h1 { font-size: 2.8rem; margin-bottom: 1rem; }
+        .hero h1 span { color: var(--tmu-yellow); }
+        .hero p { font-size: 1.15rem; opacity: 0.9; margin-bottom: 2rem; line-height: 1.7; }
+        .hero-btn { background: var(--tmu-yellow); color: var(--tmu-blue); padding: 14px 36px; border: none; border-radius: 50px; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .hero-btn:hover { background: var(--tmu-yellow-dark); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,215,0,0.4); }
+        
+        /* Sections */
+        .section { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; }
+        .section-title { text-align: center; margin-bottom: 3rem; }
+        .section-title h2 { font-size: 2rem; color: var(--tmu-blue); margin-bottom: 0.5rem; }
+        .section-title p { color: var(--gray); font-size: 1.05rem; }
+        
+        /* Search */
+        .search-container { max-width: 500px; margin: 0 auto 3rem; display: flex; gap: 0; }
+        .search-container input { flex: 1; padding: 14px 20px; border: 2px solid #ddd; border-right: none; border-radius: var(--radius) 0 0 var(--radius); font-size: 1rem; outline: none; transition: border-color 0.3s; }
+        .search-container input:focus { border-color: var(--tmu-blue); }
+        .search-container button { padding: 14px 24px; background: var(--tmu-blue); color: var(--white); border: none; border-radius: 0 var(--radius) var(--radius) 0; cursor: pointer; font-size: 1rem; transition: background 0.3s; }
+        .search-container button:hover { background: var(--tmu-blue-light); }
+        
+        /* Cards Grid */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+        .card { background: var(--white); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow); transition: all 0.3s; cursor: pointer; border-top: 4px solid var(--tmu-blue); }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .card-icon { width: 50px; height: 50px; background: var(--gray-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
+        .card h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--tmu-blue); }
+        .card p { color: var(--gray); font-size: 0.9rem; line-height: 1.5; }
+        .card .badge { display: inline-block; background: var(--tmu-yellow); color: var(--tmu-blue); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-top: 1rem; }
+        
+        /* Form */
+        .form-container { background: var(--white); border-radius: var(--radius); padding: 2.5rem; box-shadow: var(--shadow); max-width: 600px; margin: 0 auto; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--tmu-blue); font-size: 0.95rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; outline: none; transition: border-color 0.3s; font-family: inherit; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--tmu-blue); }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-btn { background: var(--tmu-blue); color: var(--white); padding: 14px 36px; border: none; border-radius: 8px; font-size: 1.05rem; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.3s; }
+        .form-btn:hover { background: var(--tmu-blue-light); }
+        
+        /* Groups List */
+        .groups-list { max-width: 700px; margin: 0 auto; }
+        .group-item { background: var(--white); border-radius: var(--radius); padding: 1.5rem 2rem; box-shadow: var(--shadow); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; transition: all 0.3s; }
+        .group-item:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .group-info h3 { color: var(--tmu-blue); margin-bottom: 0.3rem; }
+        .group-info p { color: var(--gray); font-size: 0.9rem; }
+        .group-join-btn { background: var(--tmu-yellow); color: var(--tmu-blue); padding: 10px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .group-join-btn:hover { background: var(--tmu-yellow-dark); }
+        .empty-msg { text-align: center; color: var(--gray); padding: 3rem; font-size: 1.1rem; }
+        
+        /* Footer */
+        footer { background: var(--tmu-blue); color: var(--white); text-align: center; padding: 2rem; margin-top: 3rem; }
+        footer a { color: var(--tmu-yellow); text-decoration: none; }
+        footer p { margin-bottom: 0.5rem; font-size: 0.9rem; }
+        
+        /* Toast */
+        .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--tmu-blue); color: var(--white); padding: 1rem 2rem; border-radius: 8px; box-shadow: var(--shadow); z-index: 999; opacity: 0; transform: translateY(20px); transition: all 0.4s; pointer-events: none; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.yellow { background: var(--tmu-yellow); color: var(--tmu-blue); }
+        
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .nav-links { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--tmu-blue); flex-direction: column; padding: 1rem 2rem; gap: 0.8rem; box-shadow: var(--shadow); }
+            .nav-links.open { display: flex; }
+            .hero h1 { font-size: 2rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .section { padding: 3rem 1rem; }
+        }
+    &lt;/style>
+&lt;/head>
+&lt;body>
+    &lt;nav>
+        &lt;a href="#" class="nav-brand">
+            &lt;svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                &lt;rect x="15" y="20" width="55" height="65" rx="6" fill="#FFD700" stroke="#003366" stroke-width="3"/>
+                &lt;line x1="30" y1="40" x2="60" y2="40" stroke="#003366" stroke-width="2"/>
+                &lt;line x1="30" y1="50" x2="55" y2="50" stroke="#003366" stroke-width="2"/>
+                &lt;line x1="30" y1="60" x2="48" y2="60" stroke="#003366" stroke-width="2"/>
+                &lt;circle cx="80" cy="25" r="12" fill="#003366"/>
+                &lt;path d="M80 17 L80 25 L86 25" stroke="#FFD700" stroke-width="2" fill="none"/>
+                &lt;circle cx="30" cy="85" r="5" fill="#003366"/>
+                &lt;circle cx="50" cy="88" r="5" fill="#003366"/>
+                &lt;circle cx="70" cy="85" r="5" fill="#003366"/>
+                &lt;line x1="26" y1="85" x2="54" y2="88" stroke="#003366" stroke-width="1.5"/>
+                &lt;line x1="54" y1="88" x2="66" y2="85" stroke="#003366" stroke-width="1.5"/>
+            &lt;/svg>
+            StudyCircle TMU
+        &lt;/a>
+        &lt;button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">&lt;span>&amp;#9776;&lt;/span>&lt;/button>
+        &lt;ul class="nav-links" id="navLinks">
+            &lt;li>&lt;a href="#courses">Courses&lt;/a>&lt;/li>
+            &lt;li>&lt;a href="#create-group">Create Group&lt;/a>&lt;/li>
+            &lt;li>&lt;a href="#join-group">Join Group&lt;/a>&lt;/li>
+        &lt;/ul>
+    &lt;/nav>
+
+    &lt;header class="hero">
+        &lt;div class="hero-content">
+            &lt;h1>Study Together at &lt;span>TMU&lt;/span>&lt;/h1>
+            &lt;p>Join or create study groups for your CEN100 and other courses. Collaborate, share notes, and ace your exams together with the StudyCircle community!&lt;/p>
+            &lt;a href="#create-group" class="hero-btn">Create a Study Group&lt;/a>
+        &lt;/div>
+    &lt;/header>
+
+    &lt;section id="courses" class="section">
+        &lt;div class="section-title">
+            &lt;h2>Available Courses&lt;/h2>
+            &lt;p>Find study groups for your courses&lt;/p>
+        &lt;/div>
+        &lt;div class="search-container">
+            &lt;input type="text" id="searchInput" placeholder="Search courses..." onkeyup="filterCourses()">
+            &lt;button onclick="filterCourses()">Search&lt;/button>
+        &lt;/div>
+        &lt;div class="cards-grid" id="cardsGrid">
+            &lt;div class="card" data-course="CEN100" data-title="CEN100 Computer Essentials">
+                &lt;div class="card-icon">💻&lt;/div>
+                &lt;h3>CEN100&lt;/h3>
+                &lt;p>Computer Essentials - Fundamentals of computing, digital literacy, and office productivity.&lt;/p>
+                &lt;span class="badge">Active Group&lt;/span>
+            &lt;/div>
+            &lt;div class="card" data-course="PCS211" data-title="PCS211 Programming Concepts">
+                &lt;div class="card-icon">🧑&lt;/div>
+                &lt;h3>PCS211&lt;/h3>
+                &lt;p>Programming Concepts - Introduction to programming logic, algorithms, and problem solving.&lt;/p>
+                &lt;span class="badge">Open&lt;/span>
+            &lt;/div>
+            &lt;div class="card" data-course="CHEM102" data-title="CHEM102 Chemistry Fundamentals">
+                &lt;div class="card-icon">🔬&lt;/div>
+                &lt;h3>CHEM102&lt;/h3>
+                &lt;p>Chemistry Fundamentals - General chemistry principles, periodic table, and chemical reactions.&lt;/p>
+                &lt;span class="badge">Open&lt;/span>
+            &lt;/div>
+            &lt;div class="card" data-course="MTH140" data-title="MTH140 Mathematics for Computing">
+                &lt;div class="card-icon">📐&lt;/div>
+                &lt;h3>MTH140&lt;/h3>
+                &lt;p>Mathematics for Computing - Discrete math, logic, sets, and applications in computing.&lt;/p>
+                &lt;span class="badge">Open&lt;/span>
+            &lt;/div>
+        &lt;/div>
+    &lt;/section>
+
+    &lt;section id="create-group" class="section" style="background: var(--gray-light);">
+        &lt;div class="section-title">
+            &lt;h2>Create Study Group&lt;/h2>
+            &lt;p>Start a new study group for your course&lt;/p>
+        &lt;/div>
+        &lt;div class="form-container">
+            &lt;form id="groupForm" onsubmit="createGroup(event)">
+                &lt;div class="form-group">
+                    &lt;label for="groupName">Group Name *&lt;/label>
+                    &lt;input type="text" id="groupName" placeholder="e.g. CEN100 Monday Study Group" required>
+                &lt;/div>
+                &lt;div class="form-group">
+                    &lt;label for="groupCourse">Course *&lt;/label>
+                    &lt;select id="groupCourse" required>
+                        &lt;option value="">Select a course&lt;/option>
+                        &lt;option value="CEN100">CEN100 - Computer Essentials&lt;/option>
+                        &lt;option value="PCS211">PCS211 - Programming Concepts&lt;/option>
+                        &lt;option value="CHEM102">CHEM102 - Chemistry Fundamentals&lt;/option>
+                        &lt;option value="MTH140">MTH140 - Mathematics for Computing&lt;/option>
+                    &lt;/select>
+                &lt;/div>
+                &lt;div class="form-group">
+                    &lt;label for="groupEmail">Organizer Email *&lt;/label>
+                    &lt;input type="email" id="groupEmail" placeholder="your.email@tmu.ca" required>
+                &lt;/div>
+                &lt;div class="form-group">
+                    &lt;label for="groupDesc">Description&lt;/label>
+                    &lt;textarea id="groupDesc" placeholder="What will your study sessions cover?">&lt;/textarea>
+                &lt;/div>
+                &lt;button type="submit" class="form-btn">Create Study Group&lt;/button>
+            &lt;/form>
+        &lt;/div>
+    &lt;/section>
+
+    &lt;section id="join-group" class="section">
+        &lt;div class="section-title">
+            &lt;h2>Join a Study Group&lt;/h2>
+            &lt;p>Browse existing groups and join one&lt;/p>
+        &lt;/div>
+        &lt;div class="groups-list" id="groupsList">
+            &lt;p class="empty-msg">No study groups created yet. Be the first!&lt;/p>
+        &lt;/div>
+    &lt;/section>
+
+    &lt;footer>
+        &lt;p>&amp;copy; 2024 StudyCircle TMU - Trisakti University&lt;/p>
+        &lt;p>Built with ❤️ for TMU students | &lt;a href="https://www.trisakti.ac.id" target="_blank">www.trisakti.ac.id&lt;/a>&lt;/p>
+    &lt;/footer>
+
+    &lt;div class="toast" id="toast">&lt;/div>
+
+    &lt;script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+
+        // Toast notification
+        function showToast(msg, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = 'toast show' + (type === 'yellow' ? ' yellow' : '');
+            setTimeout(() => { toast.className = 'toast'; }, 3000);
+        }
+
+        // Course filter
+        function filterCourses() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            let visible = 0;
+            cards.forEach(card => {
+                const title = card.getAttribute('data-title').toLowerCase();
+                const course = card.getAttribute('data-course').toLowerCase();
+                if (title.includes(query) || course.includes(query)) {
+                    card.style.display = '';
+                    visible++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            if (visible === 0 && query !== '') {
+                showToast('No courses found matching "' + query + '"', 'yellow');
+            }
+        }
+
+        // Group management
+        function getGroups() {
+            return JSON.parse(localStorage.getItem('studyGroups') || '[]');
+        }
+        function saveGroups(groups) {
+            localStorage.setItem('studyGroups', JSON.stringify(groups));
+        }
+
+        function createGroup(e) {
+            e.preventDefault();
+            const name = document.getElementById('groupName').value.trim();
+            const course = document.getElementById('groupCourse').value;
+            const email = document.getElementById('groupEmail').value.trim();
+            const desc = document.getElementById('groupDesc').value.trim();
+            if (!name || !course || !email) return;
+            const groups = getGroups();
+            groups.unshift({ name, course, email, desc, date: new Date().toISOString() });
+            saveGroups(groups);
+            showToast('Study group "' + name + '" created!', 'yellow');
+            document.getElementById('groupForm').reset();
+            renderGroups();
+        }
+
+        function joinGroup(email) {
+            if (email) {
+                window.location.href = 'mailto:' + email + '?subject=Study Group Join Request&body=Hi! I would like to join your study group. Thank you!';
+            } else {
+                showToast('Contact the organizer to join this group', 'yellow');
+            }
+        }
+
+        function deleteGroup(index) {
+            const groups = getGroups();
+            groups.splice(index, 1);
+            saveGroups(groups);
+            renderGroups();
+            showToast('Group removed.');
+        }
+
+        function renderGroups() {
+            const container = document.getElementById('groupsList');
+            const groups = getGroups();
+            if (groups.length === 0) {
+                container.innerHTML = '&lt;p class="empty-msg">No study groups created yet. Be the first!&lt;/p>';
+                return;
+            }
+            container.innerHTML = groups.map((g, i) => {
+                const d = new Date(g.date);
+                const dateStr = d.toLocaleDateString() + ' at ' + d.toLocaleTimeString();
+                return '&lt;div class="group-item">' +
+                    '&lt;div class="group-info">' +
+                    '&lt;h3>&lt;strong>' + g.course + '&lt;/strong> - ' + g.name + '&lt;/h3>' +
+                    '&lt;p>' + (g.desc || 'No description') + '&lt;/p>' +
+                    '&lt;p style="font-size:0.8rem;color:#999;">Created: ' + dateStr + '&lt;/p>' +
+                    '&lt;/div>' +
+                    '&lt;div style="display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+                    '&lt;a href="mailto:' + g.email + '" class="group-join-btn">Join / Email&lt;/a>' +
+                    '&lt;button onclick="deleteGroup(' + i + ')" style="background:#ff4444;color:#fff;border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:0.85rem;">Delete&lt;/button>' +
+                    '&lt;/div>' +
+                    '&lt;/div>';
+            }).join('');
+        }
+
+        // Init
+        renderGroups();
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) { target.scrollIntoView({ behavior: 'smooth' }); }
+                document.getElementById('navLinks').classList.remove('open');
+            });
+        });
+    &lt;/script>
+&lt;/body>
+&lt;/html>
